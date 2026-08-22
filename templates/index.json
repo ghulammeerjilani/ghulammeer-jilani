@@ -13,13 +13,18 @@
       "type": "custom-banner",
       "name": "Custom Hero Banner",
       "settings": {
-        "custom-class": "",
+        "custom_class": "",
         "image_1": "shopify://shop_images/top_banner.jpg",
         "image_2": "shopify://shop_images/image-2.jpg",
         "heading": "The Gift Guide",
         "description": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>",
         "button_url": "",
-        "button_text": "Shop Now"
+        "button_text": "Shop Now",
+        "button_bg_color": "#000000",
+        "button_text_color": "#ffffff",
+        "bottom_text": "Sustainable, ethically made activewear",
+        "bottom_bar_bg_color": "#f4f4f4",
+        "bottom_bar_text_color": "#111111"
       }
     }
   },
