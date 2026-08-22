@@ -388,39 +388,36 @@
 
 
 <script>
-(() => {
-  const header = document.querySelector('#custom-header-{{ section.id }}');
-  if (!header) return;
+var header = document.querySelector('#custom-header-{{ section.id }}');
 
-  const menu = header.querySelector('.custom-header__menu');
-  const drawer = header.querySelector('.custom-header__drawer');
-  const close = header.querySelector('.custom-header__close');
-  const overlay = header.querySelector('.custom-header__overlay');
+var menu = header.querySelector('.custom-header__menu');
+var drawer = header.querySelector('.custom-header__drawer');
+var close = header.querySelector('.custom-header__close');
+var overlay = header.querySelector('.custom-header__overlay');
 
-  const open = () => {
-    drawer.classList.add('is-open');
-    overlay.classList.add('is-open');
-    drawer.setAttribute('aria-hidden', 'false');
-    menu.setAttribute('aria-expanded', 'true');
-    document.body.classList.add('custom-header-open');
-  };
 
-  const hide = () => {
-    drawer.classList.remove('is-open');
-    overlay.classList.remove('is-open');
-    drawer.setAttribute('aria-hidden', 'true');
-    menu.setAttribute('aria-expanded', 'false');
-    document.body.classList.remove('custom-header-open');
-  };
+menu.addEventListener('click', function() {
 
-  menu.addEventListener('click', open);
-  close.addEventListener('click', hide);
-  overlay.addEventListener('click', hide);
+  drawer.classList.add('is-open');
+  overlay.classList.add('is-open');
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') hide();
-  });
-})();
+});
+
+
+close.addEventListener('click', function() {
+
+  drawer.classList.remove('is-open');
+  overlay.classList.remove('is-open');
+
+});
+
+
+overlay.addEventListener('click', function() {
+
+  drawer.classList.remove('is-open');
+  overlay.classList.remove('is-open');
+
+});
 </script>
 
 
