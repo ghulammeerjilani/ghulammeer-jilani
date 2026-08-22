@@ -19,7 +19,13 @@
 
          <!--Content Wrapper -->
         <div class="content_wrapper">
+            {%  if section.settings.heading !=blank %}
+                <h2 class="heading"> {{ section.settings.heading }} </h2>
+            {% endif %}
 
+            {%  if section.settings.description !=blank %}
+                <div class="description">{{ section.settings.description }}</div>
+            {% endif %}
         </div>
 
         <!--Image Right Side -->
