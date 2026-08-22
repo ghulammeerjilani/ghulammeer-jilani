@@ -34,6 +34,7 @@
       "type": "custom-header",
       "name": "Custom header",
       "settings": {
+        "logo": "shopify://shop_images/logo.png",
         "brand_name": "TISSO VISION",
         "message": "Find the ideal gift for your loved ones.",
         "button_text": "CHOOSE GIFT",
@@ -44,7 +45,7 @@
         "text_color": "#111111",
         "button_background": "#FFF42B",
         "button_text_color": "#111111",
-        "height": 29
+        "height": 70
       }
     }
   },
