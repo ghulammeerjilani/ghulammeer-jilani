@@ -59,7 +59,7 @@
   }
 
   #hero-{{ section.id }} .content_wrapper .hero_btn {
-    display: inline-flex;
+    {% comment %} display: inline-flex;
     align-items: center;
     gap: 12px;
     width: fit-content;
@@ -70,7 +70,26 @@
     letter-spacing: 1px;
     font-size: clamp(12px, 0.95vw, 16px);
     padding: 1.1em 1.8em;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease; {% endcomment %}
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 14.375vw;
+    height: 3.056vw;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.2vw;
+    background: var(--btn-bg);
+    color: #000;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 1.111vw;
+    line-height: 1.422vw;
+    font-weight: 400;
+    gap: 1.20vw;
   }
   #hero-{{ section.id }} .content_wrapper .hero_btn:hover {
     opacity: 0.85;
