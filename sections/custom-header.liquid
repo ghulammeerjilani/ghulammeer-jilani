@@ -1,1108 +1,494 @@
 {% liquid
-  assign brand_name = section.settings.brand_name | strip
-  assign message = section.settings.message | strip
-  assign button_text = section.settings.button_text | strip
-  assign button_url = section.settings.button_url
-
-  if button_url == blank
-    assign button_url = routes.all_products_collection_url
-  endif
+  assign brand = section.settings.brand
+  assign text = section.settings.text
+  assign button_text = section.settings.button_text
+  assign button_link = section.settings.button_link
 %}
 
-{% if section.settings.font != blank %}
-  {{ section.settings.font | font_face }}
-{% endif %}
+{{ section.settings.font | font_face }}
 
 <header
   id="custom-header-{{ section.id }}"
   class="custom-header"
   style="
-    --custom-header-bg: {{ section.settings.background_color }};
-    --custom-header-text: {{ section.settings.text_color }};
-    --custom-header-button-bg: {{ section.settings.button_background }};
-    --custom-header-button-hover-bg: {{ section.settings.button_hover_background }};
-    --custom-header-button-text: {{ section.settings.button_text_color }};
-    --custom-header-height: {{ section.settings.height }}px;
-    --custom-header-font-family: {{ section.settings.font.family | default: 'Jost, sans-serif' }};
+    --font: {{ section.settings.font.family }}, sans-serif;
+    --bg: {{ section.settings.bg }};
+    --text: {{ section.settings.text_color }};
+    --btn-bg: {{ section.settings.btn_bg }};
+    --btn-hover: {{ section.settings.btn_hover }};
   "
 >
   <div class="custom-header__inner">
 
-    <!-- Mobile Menu Button -->
+    <!-- Mobile menu -->
     <button
+      class="custom-header__menu"
       type="button"
-      class="custom-header__menu-button"
       aria-label="Open menu"
-      aria-controls="CustomHeaderDrawer-{{ section.id }}"
       aria-expanded="false"
     >
-      <span></span>
-      <span></span>
-      <span></span>
+      <i></i><i></i><i></i>
     </button>
-
 
     <!-- Logo -->
     <a
+      class="custom-header__logo-wrap"
       href="{{ routes.root_url }}"
-      class="custom-header__brand"
-      aria-label="{{ brand_name | escape }} - Home"
+      aria-label="{{ brand }} home"
     >
-      {% if section.settings.logo != blank %}
-
+      {% if section.settings.logo %}
         {{
           section.settings.logo
           | image_url: width: 808
           | image_tag:
             class: 'custom-header__logo',
-            widths: '200, 400, 600, 808',
-            sizes: '(max-width: 749px) 105px, 10.517vw',
             loading: 'eager',
-            alt: section.settings.logo.alt | default: brand_name
+            widths: '200,400,600,808',
+            alt: section.settings.logo.alt | default: brand
         }}
-
       {% else %}
-
-        <span class="custom-header__brand-text">
-          {{ brand_name }}
-        </span>
-
+        <span>{{ brand }}</span>
       {% endif %}
     </a>
 
+    <!-- Center text -->
+    <p class="custom-header__text">{{ text }}</p>
 
-    <!-- Desktop Center Text -->
-    {% if message != blank %}
-      <p class="custom-header__message">
-        {{ message }}
-      </p>
-    {% endif %}
-
-
-    <!-- Desktop Button -->
-    {% if button_text != blank %}
-
-      <a
-        href="{{ button_url }}"
-        class="custom-header__button"
-        {% if section.settings.open_new_tab %}
-          target="_blank"
-          rel="noopener noreferrer"
-        {% endif %}
-      >
-        <span class="custom-header__button-text">
-          {{ button_text }}
-        </span>
-
-        <span
-          class="custom-header__arrow"
-          aria-hidden="true"
-        >
-          →
-        </span>
-      </a>
-
-    {% endif %}
+    <!-- Desktop button -->
+    <a
+      class="custom-header__btn"
+      href="{{ button_link | default: routes.all_products_collection_url }}"
+    >
+      <span>{{ button_text }}</span>
+      <b aria-hidden="true">→</b>
+    </a>
 
   </div>
 
+  <!-- Mobile drawer -->
+  <div class="custom-header__drawer" aria-hidden="true">
 
-  <!-- Mobile Drawer -->
-  <aside
-    id="CustomHeaderDrawer-{{ section.id }}"
-    class="custom-header__drawer"
-    aria-hidden="true"
-  >
-
-    <div class="custom-header__drawer-header">
-
-      <span class="custom-header__drawer-title">
-        {{ brand_name }}
-      </span>
-
-      <button
-        type="button"
-        class="custom-header__close"
-        aria-label="Close menu"
-      >
-        <span></span>
-        <span></span>
-      </button>
-
-    </div>
-
-
-    <nav
-      class="custom-header__nav"
-      aria-label="Main navigation"
+    <button
+      class="custom-header__close"
+      type="button"
+      aria-label="Close menu"
     >
+      ×
+    </button>
 
-      {% if section.settings.menu != blank %}
+    <p class="custom-header__drawer-text">
+      {{ text }}
+    </p>
 
-        <ul class="custom-header__menu" role="list">
+    <a
+      class="custom-header__drawer-btn"
+      href="{{ button_link | default: routes.all_products_collection_url }}"
+    >
+      {{ button_text }}
+      <span aria-hidden="true">→</span>
+    </a>
 
-          {% for link in section.settings.menu.links %}
+  </div>
 
-            <li class="custom-header__menu-item">
-
-              <a
-                href="{{ link.url }}"
-                class="custom-header__menu-link"
-                {% if link.current %}
-                  aria-current="page"
-                {% endif %}
-              >
-                {{ link.title }}
-              </a>
-
-
-              {% if link.links != blank %}
-
-                <ul
-                  class="custom-header__submenu"
-                  role="list"
-                >
-
-                  {% for child_link in link.links %}
-
-                    <li>
-                      <a
-                        href="{{ child_link.url }}"
-                        class="custom-header__submenu-link"
-                        {% if child_link.current %}
-                          aria-current="page"
-                        {% endif %}
-                      >
-                        {{ child_link.title }}
-                      </a>
-                    </li>
-
-                  {% endfor %}
-
-                </ul>
-
-              {% endif %}
-
-            </li>
-
-          {% endfor %}
-
-        </ul>
-
-      {% else %}
-
-        <ul class="custom-header__menu" role="list">
-
-          <li>
-            <a
-              href="{{ routes.root_url }}"
-              class="custom-header__menu-link"
-            >
-              Home
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="{{ routes.all_products_collection_url }}"
-              class="custom-header__menu-link"
-            >
-              Shop
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="{{ routes.search_url }}"
-              class="custom-header__menu-link"
-            >
-              Search
-            </a>
-          </li>
-
-        </ul>
-
-      {% endif %}
-
-    </nav>
-
-  </aside>
-
-
-  <!-- Drawer Overlay -->
-  <div
-    class="custom-header__overlay"
-    aria-hidden="true"
-  ></div>
-
+  <div class="custom-header__overlay"></div>
 </header>
 
 
 <style>
-
-  /* =========================================================
-     CUSTOM HEADER
-     Desktop reference: 3840px Figma frame
-     ========================================================= */
-
-  #custom-header-{{ section.id }}.custom-header {
-    position: relative;
-    z-index: 50;
-
+  #custom-header-{{ section.id }} {
+    --scale: 1;
     width: 100%;
     height: 4.444vw;
-
-    min-height: 29px;
-
-    background: var(--custom-header-bg);
-    color: var(--custom-header-text);
-
-    font-family: var(--custom-header-font-family);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    position: relative;
+    z-index: 50;
   }
-
-
-  /* =========================================================
-     DESKTOP HEADER INNER
-     ========================================================= */
 
   #custom-header-{{ section.id }} .custom-header__inner {
-    position: relative;
-
-    display: grid;
-
-    grid-template-columns: auto 1fr auto;
-
-    align-items: center;
-
     width: 100%;
     height: 100%;
-
-    padding-left: 3.472vw;
-    padding-right: 3.472vw;
-
-    column-gap: 18.75vw;
+    box-sizing: border-box;
+    padding: 0 9.781vw;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
   }
 
+  /* Logo */
 
-  /* =========================================================
-     LOGO
-     Figma:
-     Width 403.85px
-     Height 50.67px
-
-     At 3840px:
-     Width ≈ 10.517vw
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__brand {
-    justify-self: start;
-
+  #custom-header-{{ section.id }} .custom-header__logo-wrap {
+    width: 10.517vw;
     display: flex;
     align-items: center;
-
-    width: 10.517vw;
-
     color: inherit;
     text-decoration: none;
   }
-
 
   #custom-header-{{ section.id }} .custom-header__logo {
     display: block;
-
-    width: 10.517vw;
+    width: 100%;
     height: auto;
-
-    max-width: none;
-    max-height: none;
-
-    object-fit: contain;
   }
 
+  /* Center text */
 
-  #custom-header-{{ section.id }} .custom-header__brand-text {
-    display: block;
-
-    font-family: var(--custom-header-font-family);
-
-    font-size: 1.1vw;
-    line-height: 1;
-
-    font-weight: 500;
-
-    letter-spacing: 0;
-
-    white-space: nowrap;
-  }
-
-
-  /* =========================================================
-     CENTER TEXT
-     Figma:
-     Font Jost
-     Weight 400
-     Size 42.67px
-     Line height 35.8px
-
-     At 3840px:
-     Font size = 1.111vw
-     Line height = 0.932vw
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__message {
-    justify-self: center;
-
+  #custom-header-{{ section.id }} .custom-header__text {
     margin: 0;
-
-    font-family: var(--custom-header-font-family);
-
-    font-size: 1.111vw;
-    line-height: 0.932vw;
-
-    font-weight: 400;
-    font-style: normal;
-
-    letter-spacing: 0;
-
     text-align: center;
-
-    white-space: nowrap;
+    font-size: 1.111vw;
+    line-height: .932vw;
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
+  /* Button */
 
-  /* =========================================================
-     DESKTOP BUTTON
-     Figma:
-     Width 552px
-     Height 117.33px
-
-     At 3840px:
-     Width = 14.375vw
-     Height = 3.056vw
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__button {
+  #custom-header-{{ section.id }} .custom-header__btn {
     position: relative;
     isolation: isolate;
-
     overflow: hidden;
-
-    justify-self: end;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
 
     width: 14.375vw;
     height: 3.056vw;
+    box-sizing: border-box;
 
-    padding: 0 1.1vw;
-
-    background: var(--custom-header-button-bg);
-    color: var(--custom-header-button-text);
-
-    text-decoration: none;
-
-    font-family: var(--custom-header-font-family);
-
-    font-size: 0.833vw;
-    line-height: 1;
-    font-weight: 500;
-
-    letter-spacing: 0;
-
-    text-transform: uppercase;
-
-    transition: color 0.25s ease;
-  }
-
-
-  /* =========================================================
-     BUTTON LEFT → RIGHT HOVER ANIMATION
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__button::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: -1;
-
-    background: var(--custom-header-button-hover-bg);
-
-    transform: scaleX(0);
-
-    transform-origin: left center;
-
-    transition:
-      transform 0.45s cubic-bezier(.4, 0, .2, 1);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__button:hover::before {
-    transform: scaleX(1);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__button-text {
-    position: relative;
-    z-index: 1;
-
-    transition: color 0.25s ease;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__button:hover {
-    color: #ffffff;
-  }
-
-
-  /* Arrow animation */
-
-  #custom-header-{{ section.id }} .custom-header__arrow {
-    position: relative;
-    z-index: 1;
-
-    display: inline-block;
-
-    font-size: 1.25vw;
-    line-height: 1;
-
-    transition:
-      transform 0.35s ease,
-      color 0.25s ease;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__button:hover .custom-header__arrow {
-    transform: translateX(0.3vw);
-  }
-
-
-  /* =========================================================
-     MOBILE MENU BUTTON
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__menu-button {
-    display: none;
-
-    position: absolute;
-
-    left: 12px;
-    top: 50%;
-
-    width: 24px;
-    height: 24px;
-
-    padding: 4px 0;
-
-    border: 0;
-
-    background: transparent;
-
-    color: inherit;
-
-    cursor: pointer;
-
-    flex-direction: column;
-    justify-content: center;
-
-    gap: 3px;
-
-    transform: translateY(-50%);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__menu-button span {
-    display: block;
-
-    width: 8px;
-    height: 1px;
-
-    background: currentColor;
-  }
-
-
-  /* =========================================================
-     MOBILE DRAWER
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__drawer {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    z-index: 100;
-
-    width: min(320px, 85vw);
-    height: 100dvh;
-
-    padding: 20px;
-
-    background: var(--custom-header-bg);
-    color: var(--custom-header-text);
-
-    transform: translateX(-100%);
-
-    visibility: hidden;
-
-    overflow-y: auto;
-
-    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.08);
-
-    transition:
-      transform 0.3s ease,
-      visibility 0.3s ease;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__drawer.is-open {
-    transform: translateX(0);
-
-    visibility: visible;
-  }
-
-
-  /* Drawer header */
-
-  #custom-header-{{ section.id }} .custom-header__drawer-header {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
 
-    min-height: 30px;
+    padding: 0 1.2vw;
 
-    padding-bottom: 25px;
+    background: var(--btn-bg);
+    color: #000;
 
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__drawer-title {
-    font-family: var(--custom-header-font-family);
-
-    font-size: 14px;
-    line-height: 1;
-
-    font-weight: 500;
-
-    letter-spacing: 0.04em;
-
+    text-decoration: none;
     text-transform: uppercase;
+
+    font-size: 1.111vw;
+    line-height: 1.422vw;
+    font-weight: 400;
   }
 
-
-  /* Close button */
-
-  #custom-header-{{ section.id }} .custom-header__close {
-    position: relative;
-
-    width: 30px;
-    height: 30px;
-
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
-    color: inherit;
-
-    cursor: pointer;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__close span {
+  #custom-header-{{ section.id }} .custom-header__btn::before {
+    content: "";
     position: absolute;
-
-    top: 14px;
-    left: 5px;
-
-    width: 20px;
-    height: 1px;
-
-    background: currentColor;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__close span:first-child {
-    transform: rotate(45deg);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__close span:last-child {
-    transform: rotate(-45deg);
-  }
-
-
-  /* =========================================================
-     MOBILE NAVIGATION
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__nav {
-    padding-top: 10px;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__menu,
-  #custom-header-{{ section.id }} .custom-header__submenu {
-    margin: 0;
-    padding: 0;
-
-    list-style: none;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__menu-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__menu-link {
-    display: block;
-
-    padding: 16px 0;
-
-    color: inherit;
-
-    text-decoration: none;
-
-    font-family: var(--custom-header-font-family);
-
-    font-size: 14px;
-    line-height: 1.3;
-
-    font-weight: 500;
-
-    text-transform: uppercase;
-
-    transition: opacity 0.2s ease;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__menu-link:hover {
-    opacity: 0.55;
-  }
-
-
-  /* Sub menu */
-
-  #custom-header-{{ section.id }} .custom-header__submenu {
-    padding: 0 0 8px 15px;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__submenu-link {
-    display: block;
-
-    padding: 8px 0;
-
-    color: inherit;
-
-    text-decoration: none;
-
-    font-family: var(--custom-header-font-family);
-
-    font-size: 12px;
-
-    transition: opacity 0.2s ease;
-  }
-
-
-  #custom-header-{{ section.id }} .custom-header__submenu-link:hover {
-    opacity: 0.55;
-  }
-
-
-  /* =========================================================
-     OVERLAY
-     ========================================================= */
-
-  #custom-header-{{ section.id }} .custom-header__overlay {
-    position: fixed;
-
     inset: 0;
+    z-index: -1;
+    background: var(--btn-hover);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .45s cubic-bezier(.4,0,.2,1);
+  }
 
-    z-index: 90;
+  #custom-header-{{ section.id }} .custom-header__btn:hover::before {
+    transform: scaleX(1);
+  }
 
-    background: rgba(0, 0, 0, 0.35);
+  #custom-header-{{ section.id }} .custom-header__btn span,
+  #custom-header-{{ section.id }} .custom-header__btn b {
+    position: relative;
+    z-index: 1;
+    transition: color .3s ease;
+  }
 
-    opacity: 0;
+  #custom-header-{{ section.id }} .custom-header__btn:hover {
+    color: #fff;
+  }
 
-    visibility: hidden;
+  #custom-header-{{ section.id }} .custom-header__btn b {
+    font-size: 1.35vw;
+    font-weight: 400;
+    line-height: 1;
+    transition: transform .3s ease;
+  }
 
-    transition:
-      opacity 0.3s ease,
-      visibility 0.3s ease;
+  #custom-header-{{ section.id }} .custom-header__btn:hover b {
+    transform: translateX(.3vw);
+  }
+
+  /* Mobile menu button */
+
+  #custom-header-{{ section.id }} .custom-header__menu {
+    display: none;
+  }
+
+  /* Drawer */
+
+  #custom-header-{{ section.id }} .custom-header__drawer,
+  #custom-header-{{ section.id }} .custom-header__overlay {
+    display: none;
   }
 
 
-  #custom-header-{{ section.id }} .custom-header__overlay.is-visible {
-    opacity: 1;
+  /* ================= MOBILE ================= */
 
-    visibility: visible;
-  }
+  @media (max-width: 749px) {
 
-
-  body.custom-header-drawer-open {
-    overflow: hidden;
-  }
-
-
-  /* =========================================================
-     MOBILE
-     Matches supplied mobile reference
-     ========================================================= */
-
-  @media screen and (max-width: 749px) {
-
-    #custom-header-{{ section.id }}.custom-header {
-      width: 100%;
+    #custom-header-{{ section.id }} {
       height: 40px;
-
-      min-height: 40px;
     }
-
 
     #custom-header-{{ section.id }} .custom-header__inner {
       position: relative;
-
       display: flex;
-
-      align-items: center;
       justify-content: center;
-
-      width: 100%;
-      height: 40px;
-
       padding: 0 12px;
-
-      column-gap: 0;
     }
-
 
     /* Hamburger */
 
-    #custom-header-{{ section.id }} .custom-header__menu-button {
+    #custom-header-{{ section.id }} .custom-header__menu {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      border: 0;
+      background: none;
+
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+
+      cursor: pointer;
     }
 
+    #custom-header-{{ section.id }} .custom-header__menu i {
+      display: block;
+      width: 8px;
+      height: 1px;
+      background: currentColor;
+    }
 
     /* Center logo */
 
-    #custom-header-{{ section.id }} .custom-header__brand {
+    #custom-header-{{ section.id }} .custom-header__logo-wrap {
+      width: 105px;
+    }
+
+    #custom-header-{{ section.id }} .custom-header__text,
+    #custom-header-{{ section.id }} .custom-header__btn {
+      display: none;
+    }
+
+    /* Drawer */
+
+    #custom-header-{{ section.id }} .custom-header__drawer {
+      display: block;
+
+      position: fixed;
+      inset: 0 auto 0 0;
+
+      width: min(330px, 85vw);
+      padding: 30px 24px;
+
+      box-sizing: border-box;
+
+      background: var(--bg);
+      color: var(--text);
+
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+
+      z-index: 100;
+    }
+
+    #custom-header-{{ section.id }} .custom-header__drawer.is-open {
+      transform: translateX(0);
+    }
+
+    /* Close */
+
+    #custom-header-{{ section.id }} .custom-header__close {
       position: absolute;
+      top: 15px;
+      right: 18px;
 
-      left: 50%;
-      top: 50%;
+      border: 0;
+      background: none;
 
-      width: auto;
+      font-family: Arial, sans-serif;
+      font-size: 28px;
+      font-weight: 300;
 
-      transform: translate(-50%, -50%);
+      cursor: pointer;
     }
 
+    /* Drawer text */
 
-    #custom-header-{{ section.id }} .custom-header__logo {
-      width: auto;
+    #custom-header-{{ section.id }} .custom-header__drawer-text {
+      margin: 70px 0 35px;
 
-      max-width: 105px;
-      max-height: 15px;
-
-      height: auto;
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 400;
+      text-align: center;
     }
 
+    /* Drawer button */
 
-    #custom-header-{{ section.id }} .custom-header__brand-text {
-      font-size: 11px;
+    #custom-header-{{ section.id }} .custom-header__drawer-btn {
+      width: 100%;
+      min-height: 55px;
 
-      line-height: 1;
+      padding: 0 18px;
 
-      white-space: nowrap;
+      box-sizing: border-box;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background: var(--btn-bg);
+      color: #000;
+
+      text-decoration: none;
+      text-transform: uppercase;
+
+      font-size: 14px;
+      font-weight: 400;
     }
 
+    /* Overlay */
 
-    /* Hide desktop elements */
-
-    #custom-header-{{ section.id }} .custom-header__message,
-    #custom-header-{{ section.id }} .custom-header__button {
-      display: none;
-    }
-
-  }
-
-
-  /* =========================================================
-     DESKTOP ONLY
-     ========================================================= */
-
-  @media screen and (min-width: 750px) {
-
-    #custom-header-{{ section.id }} .custom-header__drawer,
     #custom-header-{{ section.id }} .custom-header__overlay {
-      display: none;
+      position: fixed;
+      inset: 0;
+
+      display: block;
+
+      background: rgba(0,0,0,.35);
+
+      opacity: 0;
+      visibility: hidden;
+
+      z-index: 90;
+
+      transition: opacity .3s ease;
     }
 
-  }
-
-
-  /* =========================================================
-     REDUCED MOTION
-     ========================================================= */
-
-  @media (prefers-reduced-motion: reduce) {
-
-    #custom-header-{{ section.id }} .custom-header__button::before,
-    #custom-header-{{ section.id }} .custom-header__button,
-    #custom-header-{{ section.id }} .custom-header__arrow,
-    #custom-header-{{ section.id }} .custom-header__drawer,
-    #custom-header-{{ section.id }} .custom-header__overlay {
-      transition: none;
+    #custom-header-{{ section.id }} .custom-header__overlay.is-open {
+      opacity: 1;
+      visibility: visible;
     }
 
+    body.custom-header-open {
+      overflow: hidden;
+    }
   }
-
 </style>
 
 
 <script>
-  (() => {
-    const header = document.getElementById(
-      'custom-header-{{ section.id }}'
-    );
+(() => {
+  const header = document.querySelector('#custom-header-{{ section.id }}');
+  if (!header) return;
 
-    if (!header) return;
+  const menu = header.querySelector('.custom-header__menu');
+  const drawer = header.querySelector('.custom-header__drawer');
+  const close = header.querySelector('.custom-header__close');
+  const overlay = header.querySelector('.custom-header__overlay');
 
-    const menuButton = header.querySelector(
-      '.custom-header__menu-button'
-    );
+  const open = () => {
+    drawer.classList.add('is-open');
+    overlay.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    menu.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('custom-header-open');
+  };
 
-    const drawer = header.querySelector(
-      '.custom-header__drawer'
-    );
+  const hide = () => {
+    drawer.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    menu.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('custom-header-open');
+  };
 
-    const closeButton = header.querySelector(
-      '.custom-header__close'
-    );
+  menu.addEventListener('click', open);
+  close.addEventListener('click', hide);
+  overlay.addEventListener('click', hide);
 
-    const overlay = header.querySelector(
-      '.custom-header__overlay'
-    );
-
-    if (
-      !menuButton ||
-      !drawer ||
-      !closeButton ||
-      !overlay
-    ) {
-      return;
-    }
-
-
-    const openDrawer = () => {
-      drawer.classList.add('is-open');
-
-      overlay.classList.add('is-visible');
-
-      drawer.setAttribute(
-        'aria-hidden',
-        'false'
-      );
-
-      menuButton.setAttribute(
-        'aria-expanded',
-        'true'
-      );
-
-      document.body.classList.add(
-        'custom-header-drawer-open'
-      );
-
-      closeButton.focus();
-    };
-
-
-    const closeDrawer = () => {
-      drawer.classList.remove('is-open');
-
-      overlay.classList.remove('is-visible');
-
-      drawer.setAttribute(
-        'aria-hidden',
-        'true'
-      );
-
-      menuButton.setAttribute(
-        'aria-expanded',
-        'false'
-      );
-
-      document.body.classList.remove(
-        'custom-header-drawer-open'
-      );
-
-      menuButton.focus();
-    };
-
-
-    menuButton.addEventListener(
-      'click',
-      openDrawer
-    );
-
-
-    closeButton.addEventListener(
-      'click',
-      closeDrawer
-    );
-
-
-    overlay.addEventListener(
-      'click',
-      closeDrawer
-    );
-
-
-    document.addEventListener(
-      'keydown',
-      (event) => {
-
-        if (
-          event.key === 'Escape' &&
-          drawer.classList.contains('is-open')
-        ) {
-          closeDrawer();
-        }
-
-      }
-    );
-
-
-    drawer
-      .querySelectorAll('a')
-      .forEach((link) => {
-
-        link.addEventListener(
-          'click',
-          closeDrawer
-        );
-
-      });
-
-  })();
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') hide();
+  });
+})();
 </script>
 
 
 {% schema %}
 {
   "name": "Custom header",
-  "tag": "div",
-  "class": "section-custom-header",
-
   "settings": [
-
     {
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
     },
-
     {
       "type": "text",
-      "id": "brand_name",
+      "id": "brand",
       "label": "Brand name",
       "default": "TISSO VISION"
     },
-
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font",
+      "default": "jost_n4"
+    },
     {
       "type": "text",
-      "id": "message",
-      "label": "Desktop message",
+      "id": "text",
+      "label": "Header text",
       "default": "Find the ideal gift for your loved ones."
     },
-
     {
       "type": "text",
       "id": "button_text",
       "label": "Button text",
       "default": "CHOOSE GIFT"
     },
-
     {
       "type": "url",
-      "id": "button_url",
+      "id": "button_link",
       "label": "Button link"
     },
-
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Mobile drawer menu"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "open_new_tab",
-      "label": "Open button link in new tab",
-      "default": false
-    },
-
     {
       "type": "color",
-      "id": "background_color",
+      "id": "bg",
       "label": "Header background",
       "default": "#F7F7F5"
     },
-
     {
       "type": "color",
       "id": "text_color",
       "label": "Text color",
-      "default": "#111111"
+      "default": "#000000"
     },
-
     {
       "type": "color",
-      "id": "button_background",
+      "id": "btn_bg",
       "label": "Button background",
-      "default": "#FFF42B"
+      "default": "#FFF544"
     },
-
     {
       "type": "color",
-      "id": "button_hover_background",
+      "id": "btn_hover",
       "label": "Button hover background",
-      "default": "#111111"
-    },
-
-    {
-      "type": "color",
-      "id": "button_text_color",
-      "label": "Button text color",
-      "default": "#111111"
-    },
-
-    {
-      "type": "range",
-      "id": "height",
-      "label": "Desktop height",
-      "min": 50,
-      "max": 200,
-      "step": 10,
-      "unit": "px",
-      "default": 50
+      "default": "#000000"
     }
-
   ],
-
   "presets": [
     {
       "name": "Custom header"
     }
   ]
-
 }
 {% endschema %}
