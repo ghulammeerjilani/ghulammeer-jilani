@@ -15,6 +15,7 @@
       "settings": {
         "custom-class": "",
         "image_1": "shopify://shop_images/top_banner.jpg",
+        "image_2": "shopify://shop_images/image-2.jpg",
         "heading": "Section Heading",
         "description": "",
         "button_url": "",
