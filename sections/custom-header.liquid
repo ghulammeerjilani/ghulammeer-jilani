@@ -1,3 +1,169 @@
+{% liquid
+  assign brand_name = section.settings.brand_name | strip
+  assign message = section.settings.message | strip
+  assign button_text = section.settings.button_text | strip
+  assign button_url = section.settings.button_url
+
+  if button_url == blank
+    assign button_url = routes.all_products_collection_url
+  endif
+%}
+
+<header
+  class="custom-header"
+  style="
+    --custom-header-bg: {{ section.settings.background_color }};
+    --custom-header-text: {{ section.settings.text_color }};
+    --custom-header-button-bg: {{ section.settings.button_background }};
+    --custom-header-button-text: {{ section.settings.button_text_color }};
+    --custom-header-height: {{ section.settings.height }}px;
+  "
+>
+  <div class="custom-header__inner page-width">
+
+    <!-- Mobile menu button -->
+    <button
+      type="button"
+      class="custom-header__menu-button"
+      aria-label="Open menu"
+      aria-controls="CustomHeaderDrawer"
+      aria-expanded="false"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Logo / Brand -->
+    <a
+      href="{{ routes.root_url }}"
+      class="custom-header__brand"
+      aria-label="{{ brand_name | escape }} - Home"
+    >
+      {% if section.settings.logo != blank %}
+        {{
+          section.settings.logo
+          | image_url: width: 400
+          | image_tag:
+            class: 'custom-header__logo',
+            widths: '120, 200, 300, 400',
+            sizes: '160px',
+            loading: 'eager',
+            alt: section.settings.logo.alt | default: brand_name
+        }}
+      {% else %}
+        <span class="custom-header__brand-text">
+          {{ brand_name }}
+        </span>
+      {% endif %}
+    </a>
+
+    <!-- Desktop message -->
+    <p class="custom-header__message">
+      {{ message }}
+    </p>
+
+    <!-- Desktop CTA -->
+    {% if button_text != blank %}
+      <a
+        href="{{ button_url }}"
+        class="custom-header__button"
+        {% if section.settings.open_new_tab %}
+          target="_blank"
+          rel="noopener noreferrer"
+        {% endif %}
+      >
+        <span>{{ button_text }}</span>
+        <span class="custom-header__arrow" aria-hidden="true">→</span>
+      </a>
+    {% endif %}
+
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div
+    id="CustomHeaderDrawer"
+    class="custom-header__drawer"
+    aria-hidden="true"
+  >
+    <div class="custom-header__drawer-header">
+      <span class="custom-header__drawer-title">
+        {{ brand_name }}
+      </span>
+
+      <button
+        type="button"
+        class="custom-header__close"
+        aria-label="Close menu"
+      >
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <nav
+      class="custom-header__nav"
+      aria-label="Main navigation"
+    >
+      {% if section.settings.menu != blank %}
+        <ul class="custom-header__menu" role="list">
+          {% for link in section.settings.menu.links %}
+            <li class="custom-header__menu-item">
+              <a
+                href="{{ link.url }}"
+                class="custom-header__menu-link"
+                {% if link.current %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{ link.title }}
+              </a>
+
+              {% if link.links != blank %}
+                <ul class="custom-header__submenu" role="list">
+                  {% for child_link in link.links %}
+                    <li>
+                      <a
+                        href="{{ child_link.url }}"
+                        class="custom-header__submenu-link"
+                        {% if child_link.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ child_link.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <ul class="custom-header__menu" role="list">
+          <li>
+            <a href="{{ routes.root_url }}" class="custom-header__menu-link">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.all_products_collection_url }}" class="custom-header__menu-link">
+              Shop
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.search_url }}" class="custom-header__menu-link">
+              Search
+            </a>
+          </li>
+        </ul>
+      {% endif %}
+    </nav>
+  </div>
+
+  <div class="custom-header__overlay"></div>
+</header>
+
 <style>
   .custom-header {
     position: relative;
@@ -51,82 +217,42 @@
   .custom-header__message {
     margin: 0;
     justify-self: center;
-    font-size: 16px;
-    line-height: 35.8px;
+    font-size: 9px;
+    line-height: 1.2;
     font-weight: 400;
     white-space: nowrap;
-    letter-spacing:0;
   }
 
   /* Desktop button */
 
   .custom-header__button {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
+    justify-self: end;
+    min-width: 104px;
+    height: 22px;
+    padding: 0 10px 0 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--custom-header-button-bg);
+    color: var(--custom-header-button-text);
+    text-decoration: none;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+  }
 
-  justify-self: end;
-  min-width: 104px;
-  height: 22px;
-  padding: 0 10px 0 13px;
+  .custom-header__button:hover {
+    opacity: .85;
+  }
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-
-  background: var(--custom-header-button-bg);
-  color: var(--custom-header-button-text);
-  text-decoration: none;
-
-  font-size: 8px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-
-/* Hover background */
-.custom-header__button::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-
-  background: #111;
-  transform: scaleX(0);
-  transform-origin: left center;
-
-  transition: transform .35s cubic-bezier(.4, 0, .2, 1);
-}
-
-/* Left → Right */
-.custom-header__button:hover::before {
-  transform: scaleX(1);
-}
-
-/* Text + arrow above animation */
-.custom-header__button span {
-  position: relative;
-  z-index: 1;
-  transition: color .25s ease;
-}
-
-.custom-header__button:hover {
-  color: #fff;
-}
-
-.custom-header__arrow {
-  font-size: 15px;
-  line-height: 1;
-  transition:
-    transform .35s ease,
-    color .25s ease;
-}
-
-.custom-header__button:hover .custom-header__arrow {
-  transform: translateX(3px);
-}
+  .custom-header__arrow {
+    font-size: 15px;
+    line-height: 1;
+  }
 
   /* Mobile hamburger */
 
@@ -343,175 +469,6 @@
     }
   }
 </style>
-
-
-{% liquid
-  assign brand_name = section.settings.brand_name | strip
-  assign message = section.settings.message | strip
-  assign button_text = section.settings.button_text | strip
-  assign button_url = section.settings.button_url
-
-  if button_url == blank
-    assign button_url = routes.all_products_collection_url
-  endif
-%}
-
-<header
-  class="custom-header"
-  style="
-    --custom-header-bg: {{ section.settings.background_color }};
-    --custom-header-text: {{ section.settings.text_color }};
-    --custom-header-button-bg: {{ section.settings.button_background }};
-    --custom-header-button-text: {{ section.settings.button_text_color }};
-    --custom-header-height: {{ section.settings.height }}px;
-  "
->
-  <div class="custom-header__inner page-width">
-
-    <!-- Mobile menu button -->
-    <button
-      type="button"
-      class="custom-header__menu-button"
-      aria-label="Open menu"
-      aria-controls="CustomHeaderDrawer"
-      aria-expanded="false"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <!-- Logo / Brand -->
-    <a
-      href="{{ routes.root_url }}"
-      class="custom-header__brand"
-      aria-label="{{ brand_name | escape }} - Home"
-    >
-      {% if section.settings.logo != blank %}
-        {{
-          section.settings.logo
-          | image_url: width: 400
-          | image_tag:
-            class: 'custom-header__logo',
-            widths: '120, 200, 300, 400',
-            sizes: '160px',
-            loading: 'eager',
-            alt: section.settings.logo.alt | default: brand_name
-        }}
-      {% else %}
-        <span class="custom-header__brand-text">
-          {{ brand_name }}
-        </span>
-      {% endif %}
-    </a>
-
-    <!-- Desktop message -->
-    <p class="custom-header__message">
-      {{ message }}
-    </p>
-
-    <!-- Desktop CTA -->
-    {% if button_text != blank %}
-      <a
-        href="{{ button_url }}"
-        class="custom-header__button"
-        {% if section.settings.open_new_tab %}
-          target="_blank"
-          rel="noopener noreferrer"
-        {% endif %}
-      >
-        <span>{{ button_text }}</span>
-        <span class="custom-header__arrow" aria-hidden="true">→</span>
-      </a>
-    {% endif %}
-
-  </div>
-
-  <!-- Mobile Drawer -->
-  <div
-    id="CustomHeaderDrawer"
-    class="custom-header__drawer"
-    aria-hidden="true"
-  >
-    <div class="custom-header__drawer-header">
-      <span class="custom-header__drawer-title">
-        {{ brand_name }}
-      </span>
-
-      <button
-        type="button"
-        class="custom-header__close"
-        aria-label="Close menu"
-      >
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-
-    <nav
-      class="custom-header__nav"
-      aria-label="Main navigation"
-    >
-      {% if section.settings.menu != blank %}
-        <ul class="custom-header__menu" role="list">
-          {% for link in section.settings.menu.links %}
-            <li class="custom-header__menu-item">
-              <a
-                href="{{ link.url }}"
-                class="custom-header__menu-link"
-                {% if link.current %}
-                  aria-current="page"
-                {% endif %}
-              >
-                {{ link.title }}
-              </a>
-
-              {% if link.links != blank %}
-                <ul class="custom-header__submenu" role="list">
-                  {% for child_link in link.links %}
-                    <li>
-                      <a
-                        href="{{ child_link.url }}"
-                        class="custom-header__submenu-link"
-                        {% if child_link.current %}
-                          aria-current="page"
-                        {% endif %}
-                      >
-                        {{ child_link.title }}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <ul class="custom-header__menu" role="list">
-          <li>
-            <a href="{{ routes.root_url }}" class="custom-header__menu-link">
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="{{ routes.all_products_collection_url }}" class="custom-header__menu-link">
-              Shop
-            </a>
-          </li>
-          <li>
-            <a href="{{ routes.search_url }}" class="custom-header__menu-link">
-              Search
-            </a>
-          </li>
-        </ul>
-      {% endif %}
-    </nav>
-  </div>
-
-  <div class="custom-header__overlay"></div>
-</header>
-
-
 
 <script>
   (() => {
