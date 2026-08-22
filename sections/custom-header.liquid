@@ -1,75 +1,616 @@
 <style>
-
-@media screen and (min-width: 1025px) {
-      .section-{{ section.id }}-padding {
-          padding-top: {{ section.settings.padding_top }}px;
-          padding-bottom: {{ section.settings.padding_bottom }}px;
-      }
+  .custom-header {
+    position: relative;
+    z-index: 50;
+    width: 100%;
+    height: var(--custom-header-height);
+    min-height: 29px;
+    background: var(--custom-header-bg);
+    color: var(--custom-header-text);
   }
-  
-  @media screen and (max-width: 1024px) {
-      .section-{{ section.id }}-padding {
-          padding-top: {{ section.settings.padding_top_tab }}px;
-          padding-bottom: {{ section.settings.padding_bottom_tab }}px;
-      }
-  }
-  
-  @media screen and (max-width: 767px) {
-      .section-{{ section.id }}-padding {
-          padding-top: {{ section.settings.padding_top_mob }}px;
-          padding-bottom: {{ section.settings.padding_bottom_mob }}px;
-          padding-left: 0;
-          padding-right: 0;
-       }
 
+  .custom-header__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    column-gap: 24px;
+  }
+
+  /* Brand */
+
+  .custom-header__brand {
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .custom-header__logo {
+    display: block;
+    width: auto;
+    max-width: 160px;
+    max-height: 20px;
+    object-fit: contain;
+  }
+
+  .custom-header__brand-text {
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  /* Desktop message */
+
+  .custom-header__message {
+    margin: 0;
+    justify-self: center;
+    font-size: 9px;
+    line-height: 1.2;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  /* Desktop button */
+
+  .custom-header__button {
+    justify-self: end;
+    min-width: 104px;
+    height: 22px;
+    padding: 0 10px 0 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--custom-header-button-bg);
+    color: var(--custom-header-button-text);
+    text-decoration: none;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    transition: opacity .2s ease;
+  }
+
+  .custom-header__button:hover {
+    opacity: .85;
+  }
+
+  .custom-header__arrow {
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  /* Mobile hamburger */
+
+  .custom-header__menu-button {
+    display: none;
+    width: 24px;
+    height: 24px;
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .custom-header__menu-button span {
+    display: block;
+    width: 8px;
+    height: 1px;
+    background: currentColor;
+    transition: transform .2s ease;
+  }
+
+  /* Drawer */
+
+  .custom-header__drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: min(320px, 85vw);
+    height: 100dvh;
+    padding: 20px;
+    background: var(--custom-header-bg);
+    color: var(--custom-header-text);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform .3s ease,
+      visibility .3s ease;
+    overflow-y: auto;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, .08);
+  }
+
+  .custom-header__drawer.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .custom-header__drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+  }
+
+  .custom-header__drawer-title {
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .custom-header__close {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .custom-header__close span {
+    position: absolute;
+    top: 14px;
+    left: 5px;
+    width: 20px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .custom-header__close span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .custom-header__close span:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .custom-header__nav {
+    padding-top: 10px;
+  }
+
+  .custom-header__menu,
+  .custom-header__submenu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .custom-header__menu-item {
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+  }
+
+  .custom-header__menu-link {
+    display: block;
+    padding: 16px 0;
+    color: inherit;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .custom-header__menu-link:hover,
+  .custom-header__submenu-link:hover {
+    opacity: .6;
+  }
+
+  .custom-header__submenu {
+    padding: 0 0 8px 15px;
+  }
+
+  .custom-header__submenu-link {
+    display: block;
+    padding: 8px 0;
+    color: inherit;
+    text-decoration: none;
+    font-size: 12px;
+  }
+
+  /* Overlay */
+
+  .custom-header__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(0, 0, 0, .35);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity .3s ease,
+      visibility .3s ease;
+  }
+
+  .custom-header__overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  body.custom-header-drawer-open {
+    overflow: hidden;
+  }
+
+  /* Mobile */
+
+  @media screen and (max-width: 749px) {
+    .custom-header {
+      height: 40px;
+      min-height: 40px;
+    }
+
+    .custom-header__inner {
+      display: flex;
+      justify-content: center;
+      padding: 0 12px;
+    }
+
+    .custom-header__menu-button {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      display: flex;
+      transform: translateY(-50%);
+    }
+
+    .custom-header__brand {
+      justify-self: center;
+    }
+
+    .custom-header__logo {
+      max-width: 105px;
+      max-height: 15px;
+    }
+
+    .custom-header__brand-text {
+      font-size: 11px;
+    }
+
+    .custom-header__message,
+    .custom-header__button {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .custom-header__drawer,
+    .custom-header__overlay {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .custom-header__drawer,
+    .custom-header__overlay,
+    .custom-header__button {
+      transition: none;
+    }
   }
 </style>
 
 
-<div class=" {{ section.settings.custom-class }} section-{{ section.id }}-padding section-{{ section.id }}" style=" background-color:{{section.settings.bg_color}};">
-    <div class="custom-header page-width">
-        <div class="section_title">
-            <h2>{{ section.settings.heading }}</h2>
-        </div>    
+{% liquid
+  assign brand_name = section.settings.brand_name | strip
+  assign message = section.settings.message | strip
+  assign button_text = section.settings.button_text | strip
+  assign button_url = section.settings.button_url
 
-    
+  if button_url == blank
+    assign button_url = routes.all_products_collection_url
+  endif
+%}
+
+<header
+  class="custom-header"
+  style="
+    --custom-header-bg: {{ section.settings.background_color }};
+    --custom-header-text: {{ section.settings.text_color }};
+    --custom-header-button-bg: {{ section.settings.button_background }};
+    --custom-header-button-text: {{ section.settings.button_text_color }};
+    --custom-header-height: {{ section.settings.height }}px;
+  "
+>
+  <div class="custom-header__inner page-width">
+
+    <!-- Mobile menu button -->
+    <button
+      type="button"
+      class="custom-header__menu-button"
+      aria-label="Open menu"
+      aria-controls="CustomHeaderDrawer"
+      aria-expanded="false"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Logo / Brand -->
+    <a
+      href="{{ routes.root_url }}"
+      class="custom-header__brand"
+      aria-label="{{ brand_name | escape }} - Home"
+    >
+      {% if section.settings.logo != blank %}
+        {{
+          section.settings.logo
+          | image_url: width: 400
+          | image_tag:
+            class: 'custom-header__logo',
+            widths: '120, 200, 300, 400',
+            sizes: '160px',
+            loading: 'eager',
+            alt: section.settings.logo.alt | default: brand_name
+        }}
+      {% else %}
+        <span class="custom-header__brand-text">
+          {{ brand_name }}
+        </span>
+      {% endif %}
+    </a>
+
+    <!-- Desktop message -->
+    <p class="custom-header__message">
+      {{ message }}
+    </p>
+
+    <!-- Desktop CTA -->
+    {% if button_text != blank %}
+      <a
+        href="{{ button_url }}"
+        class="custom-header__button"
+        {% if section.settings.open_new_tab %}
+          target="_blank"
+          rel="noopener noreferrer"
+        {% endif %}
+      >
+        <span>{{ button_text }}</span>
+        <span class="custom-header__arrow" aria-hidden="true">→</span>
+      </a>
+    {% endif %}
+
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div
+    id="CustomHeaderDrawer"
+    class="custom-header__drawer"
+    aria-hidden="true"
+  >
+    <div class="custom-header__drawer-header">
+      <span class="custom-header__drawer-title">
+        {{ brand_name }}
+      </span>
+
+      <button
+        type="button"
+        class="custom-header__close"
+        aria-label="Close menu"
+      >
+        <span></span>
+        <span></span>
+      </button>
     </div>
-</div>
 
+    <nav
+      class="custom-header__nav"
+      aria-label="Main navigation"
+    >
+      {% if section.settings.menu != blank %}
+        <ul class="custom-header__menu" role="list">
+          {% for link in section.settings.menu.links %}
+            <li class="custom-header__menu-item">
+              <a
+                href="{{ link.url }}"
+                class="custom-header__menu-link"
+                {% if link.current %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{ link.title }}
+              </a>
+
+              {% if link.links != blank %}
+                <ul class="custom-header__submenu" role="list">
+                  {% for child_link in link.links %}
+                    <li>
+                      <a
+                        href="{{ child_link.url }}"
+                        class="custom-header__submenu-link"
+                        {% if child_link.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ child_link.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <ul class="custom-header__menu" role="list">
+          <li>
+            <a href="{{ routes.root_url }}" class="custom-header__menu-link">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.all_products_collection_url }}" class="custom-header__menu-link">
+              Shop
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.search_url }}" class="custom-header__menu-link">
+              Search
+            </a>
+          </li>
+        </ul>
+      {% endif %}
+    </nav>
+  </div>
+
+  <div class="custom-header__overlay"></div>
+</header>
+
+
+
+<script>
+  (() => {
+    const header = document.querySelector('.custom-header');
+
+    if (!header) return;
+
+    const menuButton = header.querySelector('.custom-header__menu-button');
+    const drawer = header.querySelector('.custom-header__drawer');
+    const closeButton = header.querySelector('.custom-header__close');
+    const overlay = header.querySelector('.custom-header__overlay');
+
+    if (!menuButton || !drawer || !closeButton || !overlay) return;
+
+    const openDrawer = () => {
+      drawer.classList.add('is-open');
+      overlay.classList.add('is-visible');
+
+      drawer.setAttribute('aria-hidden', 'false');
+      menuButton.setAttribute('aria-expanded', 'true');
+
+      document.body.classList.add('custom-header-drawer-open');
+
+      closeButton.focus();
+    };
+
+    const closeDrawer = () => {
+      drawer.classList.remove('is-open');
+      overlay.classList.remove('is-visible');
+
+      drawer.setAttribute('aria-hidden', 'true');
+      menuButton.setAttribute('aria-expanded', 'false');
+
+      document.body.classList.remove('custom-header-drawer-open');
+
+      menuButton.focus();
+    };
+
+    menuButton.addEventListener('click', openDrawer);
+    closeButton.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    drawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeDrawer);
+    });
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "Custom Header",
+  "name": "Custom header",
+  "tag": "div",
+  "class": "section-custom-header",
   "settings": [
-    { "type": "text", "id": "custom-class", "label": "Custom Class" },
-    { "type": "color", "id": "bg_color", "label": "Background Color" },
-    { "type": "header", "content": "Heading" },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
     {
       "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Section Heading"
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "TISSO VISION"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Desktop message",
+      "default": "Find the ideal gift for your loved ones."
     },
     {
       "type": "text",
       "id": "button_text",
-      "label": "Button Text",
-      "default": "View All"
+      "label": "Desktop button text",
+      "default": "CHOOSE GIFT"
     },
-    { "type": "header", "content": "Padding Settings" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step":2, "unit": "px", "label": "Padding Top", "default": 60 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Bottom", "default": 60 },
-    { "type": "range", "id": "padding_top_tab", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Top Tab", "default": 50 },
-    { "type": "range", "id": "padding_bottom_tab", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Bottom Tab", "default": 50 },
-    { "type": "range", "id": "padding_top_mob", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Top Mob", "default": 30 },
-    { "type": "range", "id": "padding_bottom_mob", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Bottom Mob", "default": 30 }
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Desktop button link"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Mobile drawer menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_new_tab",
+      "label": "Open button link in new tab",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F7F7F5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#FFF42B"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Desktop height",
+      "min": 29,
+      "max": 70,
+      "step": 1,
+      "unit": "px",
+      "default": 29
+    }
   ],
-  
   "presets": [
     {
-      "name": "Custom Header"
+      "name": "Custom header"
     }
   ]
 }
 {% endschema %}
-
