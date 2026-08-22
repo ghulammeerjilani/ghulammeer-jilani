@@ -26,17 +26,14 @@ letter-spacing: 0px;
 
 
 <section class=" {{ section.settings.custom-class }}" id="hero-{{ section.id }}">
-    <!-------------  Top Banner Image-------------- -->
     {% if section.settings.image_1 !=blank %}
         <div class="hero_banner_top">
             <img src="{{section.settings.image_1 | img_url:'master'}}">
         </div>
     {% endif %}
 
-     <!------------- Image With text-------------- -->
     <div class="middle_row_wrapper">
 
-         <!--Content Wrapper -->
         <div class="content_wrapper">
             {%  if section.settings.heading !=blank %}
                 <h2 class="heading"> {{ section.settings.heading }} </h2>
@@ -46,8 +43,6 @@ letter-spacing: 0px;
                 <div class="description">{{ section.settings.description }}</div>
             {% endif %}
         </div>
-
-        <!--Image Right Side -->
 
          <div class="banner_image_wrapper">
              <img src="{{section.settings.image_2 | img_url:'master'}}">
