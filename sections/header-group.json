@@ -13,6 +13,7 @@
   "sections": {
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -28,9 +29,27 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "custom_header_rdNXCL": {
+      "type": "custom-header",
+      "name": "Custom header",
+      "settings": {
+        "brand_name": "TISSO VISION",
+        "message": "Find the ideal gift for your loved ones.",
+        "button_text": "CHOOSE GIFT",
+        "button_url": "",
+        "menu": "main-menu",
+        "open_new_tab": false,
+        "background_color": "#F7F7F5",
+        "text_color": "#111111",
+        "button_background": "#FFF42B",
+        "button_text_color": "#111111",
+        "height": 29
+      }
     }
   },
   "order": [
-    "header"
+    "header",
+    "custom_header_rdNXCL"
   ]
 }
