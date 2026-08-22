@@ -5,8 +5,6 @@
   assign button_link = section.settings.button_link
 %}
 
-{{ section.settings.font | font_face }}
-
 <header
   id="custom-header-{{ section.id }}"
   class="custom-header"
@@ -436,12 +434,6 @@
       "id": "brand",
       "label": "Brand name",
       "default": "TISSO VISION"
-    },
-    {
-      "type": "font_picker",
-      "id": "font",
-      "label": "Font",
-      "default": "jost_n4"
     },
     {
       "type": "text",
