@@ -7,11 +7,16 @@
 
 
 <section class=" {{ section.settings.custom-class }}" id="hero-{{ section.id }}">
+    <!-------------  Top Banner Image-------------- -->
     {% if section.settings.image_1 !=blank %}
-    <div class="hero_banner_top">
-        <img src="{{section.settings.image_1 | img_url:'master'}}">
-    </div>
+        <div class="hero_banner_top">
+            <img src="{{section.settings.image_1 | img_url:'master'}}">
+        </div>
     {% endif %}
+
+     <!------------- Image With text-------------- -->
+
+
 </section>
 
 
