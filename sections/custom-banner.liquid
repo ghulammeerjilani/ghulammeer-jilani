@@ -78,6 +78,22 @@
     font-weight: 400;
     gap:1.20vw;
   }
+
+  #hero-{{ section.id }} .content_wrapper .hero_btn {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:#FFF544;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .45s cubic-bezier(.4,0,.2,1);
+  }
+
+  #custom-header-{{ section.id }} .custom-header__btn:hover::before {
+    transform: scaleX(1);
+  }
+
   #hero-{{ section.id }} .content_wrapper .hero_btn:hover {
     opacity: 0.85;
   }
