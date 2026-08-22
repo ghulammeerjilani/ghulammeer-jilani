@@ -27,7 +27,7 @@
 
 
 <div class=" {{ section.settings.custom-class }} section-{{ section.id }}-padding section-{{ section.id }}" style=" background-color:{{section.settings.bg_color}};">
-    <div class="custom-product-slider page-width">
+    <div class="custom-header page-width">
         <div class="section_title">
             <h2>{{ section.settings.heading }}</h2>
         </div>    
@@ -39,7 +39,7 @@
 
 {% schema %}
 {
-  "name": "Custom Product Slider",
+  "name": "Custom Header",
   "settings": [
     { "type": "text", "id": "custom-class", "label": "Custom Class" },
     { "type": "color", "id": "bg_color", "label": "Background Color" },
@@ -64,23 +64,10 @@
     { "type": "range", "id": "padding_top_mob", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Top Mob", "default": 30 },
     { "type": "range", "id": "padding_bottom_mob", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Padding Bottom Mob", "default": 30 }
   ],
-  "blocks": [
-    {
-      "type": "Product",
-      "name": "Product",
-      "settings": [
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Placeholder / Label",
-          "default": "Field Name"
-        },
-      ]
-    }
-  ],
+  
   "presets": [
     {
-      "name": "Custom Product Slider"
+      "name": "Custom Header"
     }
   ]
 }
