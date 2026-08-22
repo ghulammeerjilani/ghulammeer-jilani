@@ -1,75 +1,240 @@
+{% comment %}
+  Custom Hero Banner — Gift Guide style
+  Layout:
+    1. Full-width top image
+    2. Middle row: left content (heading, description, button) + right image
+    3. Full-width bottom bar with centered text
+
+  Type scale reference (design canvas = 3840px wide):
+    Heading      164.78px -> 4.29vw  (clamped 28px–100px)
+    Description   47.08px -> 1.23vw  (clamped 14px–24px)
+    Bottom bar     42.67px -> 1.11vw  (clamped 12px–20px)
+{% endcomment %}
+
 <style>
-#hero-{{ section.id }} .hero_banner_top img{
-    width:100%;
-}
+  #hero-{{ section.id }} {
+    --heading-size: clamp(28px, 4.29vw, 100px);
+    --desc-size: clamp(14px, 1.23vw, 24px);
+    --bottom-size: clamp(12px, 1.11vw, 20px);
+    --btn-bg: {{ section.settings.button_bg_color }};
+    --btn-color: {{ section.settings.button_text_color }};
+    --bottom-bg: {{ section.settings.bottom_bar_bg_color }};
+    --bottom-color: {{ section.settings.bottom_bar_text_color }};
+    overflow: hidden;
+  }
 
-#hero-{{ section.id }} .middle_row_wrapper{
+  /* ---------- Top full-width image ---------- */
+  #hero-{{ section.id }} .hero_banner_top {
+    width: 100%;
+    line-height: 0;
+  }
+  #hero-{{ section.id }} .hero_banner_top img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ---------- Middle row: content + image ---------- */
+  #hero-{{ section.id }} .middle_row_wrapper {
     display: flex;
-    padding-left: 09.781vw;
-}
+    align-items: center;
+    justify-content: space-between;
+    gap: 4vw;
+    padding: 4vw 5.78vw;
+    flex-wrap: wrap;
+  }
 
-#hero-{{ section.id }} .middle_row_wrapper .banner_image_wrapper img{
-    width:100%;
-}
-/* ------  ------  */
+  #hero-{{ section.id }} .content_wrapper {
+    flex: 1 1 380px;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
 
-#hero-{{ section.id }} .content_wrapper .heading{
-font-weight: 500;
-font-size: 70px;
-line-height: 100%;
-letter-spacing: 0px;
+  #hero-{{ section.id }} .content_wrapper .heading {
+    font-weight: 500;
+    font-size: var(--heading-size);
+    line-height: 100%;
+    letter-spacing: 0px;
+    margin: 0;
+  }
 
-}
+  #hero-{{ section.id }} .content_wrapper .description {
+    font-weight: 400;
+    font-size: var(--desc-size);
+    line-height: 140%;
+    letter-spacing: 0px;
+    margin: 0;
+  }
+  #hero-{{ section.id }} .content_wrapper .description p {
+    margin: 0;
+  }
 
+  #hero-{{ section.id }} .content_wrapper .hero_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: fit-content;
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: clamp(12px, 0.95vw, 16px);
+    font-weight: 600;
+    padding: 1.1em 1.8em;
+    transition: opacity 0.2s ease;
+  }
+  #hero-{{ section.id }} .content_wrapper .hero_btn:hover {
+    opacity: 0.85;
+  }
+  #hero-{{ section.id }} .content_wrapper .hero_btn svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  #hero-{{ section.id }} .banner_image_wrapper {
+    flex: 1 1 45%;
+    max-width: 55%;
+    line-height: 0;
+  }
+  #hero-{{ section.id }} .banner_image_wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ---------- Bottom center bar ---------- */
+  #hero-{{ section.id }} .bottom_bar {
+    width: 100%;
+    background: var(--bottom-bg);
+    color: var(--bottom-color);
+    text-align: center;
+    vertical-align: middle;
+    padding: 1.4em 20px;
+  }
+  #hero-{{ section.id }} .bottom_bar p {
+    margin: 0;
+    font-weight: 400;
+    font-size: var(--bottom-size);
+    line-height: 1.15;
+    letter-spacing: 0px;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media screen and (max-width: 749px) {
+    #hero-{{ section.id }} .middle_row_wrapper {
+      flex-direction: column-reverse;
+      padding: 32px 20px;
+      gap: 24px;
+      text-align: center;
+    }
+    #hero-{{ section.id }} .content_wrapper {
+      max-width: 100%;
+      align-items: center;
+    }
+    #hero-{{ section.id }} .banner_image_wrapper {
+      max-width: 100%;
+      flex-basis: auto;
+    }
+    #hero-{{ section.id }} .bottom_bar {
+      padding: 16px 20px;
+    }
+  }
 </style>
 
+<section class="{{ section.settings.custom_class }}" id="hero-{{ section.id }}">
 
-<section class=" {{ section.settings.custom-class }}" id="hero-{{ section.id }}">
-    {% if section.settings.image_1 !=blank %}
-        <div class="hero_banner_top">
-            <img src="{{section.settings.image_1 | img_url:'master'}}">
-        </div>
-    {% endif %}
+  {%- if section.settings.image_1 != blank -%}
+    <div class="hero_banner_top">
+      <img
+        src="{{ section.settings.image_1 | img_url: 'master' }}"
+        srcset="
+          {{ section.settings.image_1 | img_url: '750x' }} 750w,
+          {{ section.settings.image_1 | img_url: '1500x' }} 1500w,
+          {{ section.settings.image_1 | img_url: '2000x' }} 2000w,
+          {{ section.settings.image_1 | img_url: 'master' }} {{ section.settings.image_1.width }}w"
+        sizes="100vw"
+        alt="{{ section.settings.image_1.alt | default: section.settings.heading | escape }}"
+        loading="lazy"
+        width="{{ section.settings.image_1.width }}"
+        height="{{ section.settings.image_1.height }}"
+      >
+    </div>
+  {%- endif -%}
 
-    <div class="middle_row_wrapper">
+  <div class="middle_row_wrapper">
 
-        <div class="content_wrapper">
-            {%  if section.settings.heading !=blank %}
-                <h2 class="heading"> {{ section.settings.heading }} </h2>
-            {% endif %}
+    <div class="content_wrapper">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
 
-            {%  if section.settings.description !=blank %}
-                <div class="description">{{ section.settings.description }}</div>
-            {% endif %}
-        </div>
+      {%- if section.settings.description != blank -%}
+        <div class="description">{{ section.settings.description }}</div>
+      {%- endif -%}
 
-         <div class="banner_image_wrapper">
-             <img src="{{section.settings.image_2 | img_url:'master'}}">
-        </div>
+      {%- if section.settings.button_text != blank -%}
+        <a href="{{ section.settings.button_url | default: '#' }}" class="hero_btn">
+          {{ section.settings.button_text }}
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
     </div>
 
-</section>
+    {%- if section.settings.image_2 != blank -%}
+      <div class="banner_image_wrapper">
+        <img
+          src="{{ section.settings.image_2 | img_url: 'master' }}"
+          srcset="
+            {{ section.settings.image_2 | img_url: '600x' }} 600w,
+            {{ section.settings.image_2 | img_url: '1200x' }} 1200w,
+            {{ section.settings.image_2 | img_url: 'master' }} {{ section.settings.image_2.width }}w"
+          sizes="(max-width: 749px) 100vw, 45vw"
+          alt="{{ section.settings.image_2.alt | escape }}"
+          loading="lazy"
+          width="{{ section.settings.image_2.width }}"
+          height="{{ section.settings.image_2.height }}"
+        >
+      </div>
+    {%- endif -%}
 
+  </div>
+
+  {%- if section.settings.bottom_text != blank -%}
+    <div class="bottom_bar">
+      <p>{{ section.settings.bottom_text }}</p>
+    </div>
+  {%- endif -%}
+
+</section>
 
 {% schema %}
 {
   "name": "Custom Hero Banner",
   "settings": [
-    { 
-        "type": "text",
-        "id": "custom-class",
-        "label": "Custom Class" 
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
     },
-    { "type": "header", "content": "Hero Image" },
+    { "type": "header", "content": "Images" },
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image-1",
+      "label": "Top Image (full width)"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image-2",
+      "label": "Right Image (middle row)"
     },
     { "type": "header", "content": "Content" },
     {
@@ -86,7 +251,7 @@ letter-spacing: 0px;
     {
       "type": "url",
       "id": "button_url",
-      "label": "Link",
+      "label": "Button Link"
     },
     {
       "type": "text",
@@ -94,8 +259,38 @@ letter-spacing: 0px;
       "label": "Button Text",
       "default": "Shop Now"
     },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    { "type": "header", "content": "Bottom Bar" },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Bar Text",
+      "default": "Sustainable, ethically made activewear"
+    },
+    {
+      "type": "color",
+      "id": "bottom_bar_bg_color",
+      "label": "Bottom Bar Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "bottom_bar_text_color",
+      "label": "Bottom Bar Text Color",
+      "default": "#111111"
+    }
   ],
- 
   "presets": [
     {
       "name": "Custom Hero Banner"
@@ -103,4 +298,3 @@ letter-spacing: 0px;
   ]
 }
 {% endschema %}
-
