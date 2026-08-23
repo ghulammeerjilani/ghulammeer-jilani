@@ -354,6 +354,8 @@ body.custom-product-card-popup-open {
   .custom-product-card-grid__plus{
     top:6px !important;
     right:6px !important;
+    width: 24px;
+    height: 24px;
   }
 }
 
