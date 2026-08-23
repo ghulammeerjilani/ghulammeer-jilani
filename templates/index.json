@@ -37,10 +37,19 @@
             "button_top": 188,
             "button_right": 132
           }
+        },
+        "product_GzK6aj": {
+          "type": "product",
+          "settings": {
+            "product": "blue-silk-tuxedo",
+            "button_top": 178,
+            "button_right": 38
+          }
         }
       },
       "block_order": [
-        "product_7NgHeR"
+        "product_7NgHeR",
+        "product_GzK6aj"
       ],
       "name": "Custom Product Card",
       "settings": {
