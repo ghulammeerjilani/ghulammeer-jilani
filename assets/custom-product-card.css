@@ -3,8 +3,8 @@
    ========================================================================== */
 
 :root {
-  --cpc-black: #111111;
-  --cpc-gray-bg: #f4f4f2;
+  --cpc-black: #000000;
+  --cpc-gray-bg: #f5f5f5;
   --cpc-border: #e2e2df;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .page-width {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 32px;
   box-sizing: border-box;
