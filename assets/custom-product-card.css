@@ -245,6 +245,10 @@
   margin-bottom: 20px;
 }
 
+.custom-product-card-popup__option:last-of-type{
+  margin-bottom: 40px;
+}
+
 .custom-product-card-popup__option-label {
   font-size: 13px;
   font-weight: 500;
