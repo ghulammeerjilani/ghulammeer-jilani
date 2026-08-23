@@ -353,6 +353,11 @@ body.custom-product-card-popup-open {
 }
 
 @media (max-width:575px){
+
+  .custom-product-card-popup__header {
+
+    flex-direction: column;
+  }
   .custom-product-card-popup_img_wrapper {
     width: 100%;
     height: 164px;
