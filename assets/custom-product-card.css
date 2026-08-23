@@ -306,7 +306,7 @@
 .custom-product-card-popup__add {
   width: 100%;
   flex-shrink: 0;
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0;
 }
 
 .custom-product-card-popup__add:disabled {
