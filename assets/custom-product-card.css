@@ -333,6 +333,15 @@ body.custom-product-card-popup-open {
    Responsive / mobile
    ========================================================================== */
 
+@media (max-width:991px){
+    .custom-product-card-grid__plus{
+      top:10px !important;
+      right:10px !important;
+      width: 32px;
+      height: 32px;
+    }
+}   
+
 @media screen and (max-width: 749px) {
   .page-width {
     padding: 0 16px;
