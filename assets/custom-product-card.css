@@ -235,7 +235,10 @@
   color: #000000;
   margin: 0 0 ;
 }
-
+custom-product-card-popup__options{
+  display:flex;
+  flex-direction:column-reverse;
+}
 
 .custom-product-card-popup__option {
   margin-bottom: 20px;
