@@ -235,7 +235,8 @@
   color: #000000;
   margin: 0 0 ;
 }
-custom-product-card-popup__options{
+
+.custom-product-card-popup__options{
   display:flex;
   flex-direction:column-reverse;
 }
