@@ -26,9 +26,34 @@
         "bottom_bar_bg_color": "#f5f5f5",
         "bottom_bar_text_color": "#000000"
       }
+    },
+    "custom_product_card_GqdUJz": {
+      "type": "custom-product-card",
+      "blocks": {
+        "product_7NgHeR": {
+          "type": "product",
+          "settings": {
+            "product": "black-leather-bag",
+            "button_top": 188,
+            "button_right": 132
+          }
+        }
+      },
+      "block_order": [
+        "product_7NgHeR"
+      ],
+      "name": "Custom Product Card",
+      "settings": {
+        "heading": "Tisso vison in the wild",
+        "bundle_product": "dark-winter-jacket",
+        "bundle_product_handle": "",
+        "bundle_trigger_1": "Black",
+        "bundle_trigger_2": "M"
+      }
     }
   },
   "order": [
-    "custom_banner_kV8pxn"
+    "custom_banner_kV8pxn",
+    "custom_product_card_GqdUJz"
   ]
 }
