@@ -1,0 +1,209 @@
+{{ 'custom-product-card.css' | asset_url | stylesheet_tag }}
+
+
+{%- assign bundle_product = section.settings.bundle_product -%}
+{%- if bundle_product == blank and section.settings.bundle_product_handle != blank -%}
+  {%- assign bundle_product = all_products[section.settings.bundle_product_handle] -%}
+{%- endif -%}
+{%- assign bundle_variant = bundle_product.selected_or_first_available_variant -%}
+
+<section class="custom-product-card-grid" id="CustomProductCardGrid-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="custom-product-card-grid__container page-width">
+    <h2 class="custom-product-card-grid__heading">{{ section.settings.heading }}</h2>
+
+    <div class="custom-product-card-grid__blocks">
+      {% for block in section.blocks %}
+        {% assign product = block.settings.product %}
+        <div class="custom-product-card-grid__block" {{ block.shopify_attributes }}>
+          {% if block.settings.custom_image %}
+            {{
+              block.settings.custom_image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', class: 'custom-product-card-grid__image', alt: product.title
+            }}
+          {% elsif product != blank and product.featured_image %}
+            {{
+              product.featured_image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', class: 'custom-product-card-grid__image', alt: product.title
+            }}
+          {% else %}
+            <div class="custom-product-card-grid__image custom-product-card-grid__image--placeholder">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% if product != blank %}
+            {%- comment -%} Quick-view trigger; top/right offset is set per block below {%- endcomment -%}
+            <button
+              type="button"
+              class="custom-product-card-grid__plus"
+              style="top: {{ block.settings.button_top | default: 16 }}px; right: {{ block.settings.button_right | default: 16 }}px;"
+              data-custom-product-card-open="{{ forloop.index0 }}"
+              aria-label="Quick view {{ product.title | escape }}"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 1V15M1 8H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </button>
+
+            <script type="application/json" data-custom-product-card-product="{{ forloop.index0 }}">
+              {
+                "title": {{ product.title | json }},
+                "description": {{ product.description | strip_html | truncate: 200 | json }},
+                "price": {{ product.price | money | json }},
+                "image": {{ product.featured_image | image_url: width: 400 | json }},
+                "url": {{ product.url | json }},
+                "options": {{ product.options_with_values | json }},
+                "variants": [
+                  {% for variant in product.variants %}
+                    {
+                      "id": {{ variant.id | json }},
+                      "title": {{ variant.title | json }},
+                      "available": {{ variant.available | json }},
+                      "price": {{ variant.price | money | json }},
+                      "option1": {{ variant.option1 | json }},
+                      "option2": {{ variant.option2 | json }},
+                      "option3": {{ variant.option3 | json }}
+                    }{% unless forloop.last %},{% endunless %}
+                  {% endfor %}
+                ]
+              }
+            </script>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="custom-product-card-popup-overlay" id="CustomProductCardPopupOverlay-{{ section.id }}" hidden>
+    <div class="custom-product-card-popup" role="dialog" aria-modal="true" aria-label="Quick view">
+      <button type="button" class="custom-product-card-popup__close" id="CustomProductCardPopupClose-{{ section.id }}" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
+
+      <div class="custom-product-card-popup__scroll">
+        {%- comment -%} Header: thumbnail + title/price, matches reference layout {%- endcomment -%}
+        <div class="custom-product-card-popup__header">
+          <div class="custom-product-card-popup_img_wrapper">
+            <img class="custom-product-card-popup__image" id="CustomProductCardPopupImage-{{ section.id }}" src="" alt="" />
+          </div>
+          <div class="custom-product-card-popup__header-text">
+            <h3 class="custom-product-card-popup__title" id="CustomProductCardPopupTitle-{{ section.id }}"></h3>
+            <p class="custom-product-card-popup__price" id="CustomProductCardPopupPrice-{{ section.id }}"></p>
+            <p class="custom-product-card-popup__description" id="CustomProductCardPopupDescription-{{ section.id }}"></p>
+          </div>
+        </div>
+
+        <div class="custom-product-card-popup__options" id="CustomProductCardPopupOptions-{{ section.id }}"></div>
+
+        <button
+          type="button"
+          class="custom-product-card-btn custom-product-card-btn--black custom-product-card-popup__add"
+          id="CustomProductCardPopupAdd-{{ section.id }}"
+          disabled
+        >
+        <span class="custom-product-card-btn__label">Add to cart</span>
+        <span class="custom-product-card-btn__arrow" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M1 8H15M15 8L9 2M15 8L9 14"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </button>
+
+        <p class="custom-product-card-popup__message" id="CustomProductCardPopupMessage-{{ section.id }}" role="status"></p>
+      </div>
+
+     
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="CustomProductCardConfig-{{ section.id }}">
+  {
+    "bundleProductVariantId": {{ bundle_variant.id | default: null | json }},
+    "bundleProductAvailable": {{ bundle_variant.available | default: false | json }},
+    "bundleProductTitle": {{ bundle_product.title | default: "" | json }},
+    "bundleTrigger1": {{ section.settings.bundle_trigger_1 | json }},
+    "bundleTrigger2": {{ section.settings.bundle_trigger_2 | json }}
+  }
+</script>
+
+{{ 'custom-product-card.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "Custom Product Card",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Tisso vison in the wild" },
+    { "type": "header", "content": "Bundle rule" },
+    {
+      "type": "paragraph",
+      "content": "When a shopper adds any grid product with both option values below selected on the same variant, this product is added to the cart automatically too (e.g. Soft Winter Jacket)."
+    },
+    { "type": "product", "id": "bundle_product", "label": "Auto-add product" },
+    {
+      "type": "text",
+      "id": "bundle_product_handle",
+      "label": "Fallback product handle",
+      "info": "Used only if \"Auto-add product\" above is left empty. Must match the product's URL handle exactly, e.g. soft-winter-jacket.",
+      "default": "soft-winter-jacket"
+    },
+    { "type": "text", "id": "bundle_trigger_1", "label": "Trigger option value 1", "default": "Black" },
+    { "type": "text", "id": "bundle_trigger_2", "label": "Trigger option value 2", "default": "Medium" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "custom_image", "label": "Custom tile image (optional)" },
+        { "type": "header", "content": "Quick view button position" },
+        {
+          "type": "range",
+          "id": "button_top",
+          "label": "Top offset",
+          "min": 0,
+          "max": 200,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "button_right",
+          "label": "Right offset",
+          "min": 0,
+          "max": 200,
+          "step": 2,
+          "unit": "px",
+          "default": 16
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Custom Product Card",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

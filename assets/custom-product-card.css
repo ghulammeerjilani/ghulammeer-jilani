@@ -1,0 +1,346 @@
+/* ==========================================================================
+   Custom Product Card — grid + quick-view popup
+   ========================================================================== */
+
+:root {
+  --cpc-black: #111111;
+  --cpc-gray-bg: #f4f4f2;
+  --cpc-border: #e2e2df;
+}
+
+.custom-product-card-grid {
+  font-family: var(--font-body-family, inherit);
+  color: var(--cpc-black);
+}
+
+.page-width {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+/* ---------- Buttons ---------- */
+
+.custom-product-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.25s ease, opacity 0.25s ease;
+}
+
+.custom-product-card-btn--black {
+  background: var(--cpc-black);
+  color: #ffffff;
+}
+
+.custom-product-card-btn--black:hover {
+  background: #2b2b2b;
+}
+
+.custom-product-card-btn__arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.custom-product-card-btn:hover .custom-product-card-btn__arrow,
+.custom-product-card-btn:focus-visible .custom-product-card-btn__arrow {
+  transform: translateX(6px);
+}
+
+/* ==========================================================================
+   Grid
+   ========================================================================== */
+
+.custom-product-card-grid__container {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.custom-product-card-grid__heading {
+  font-size: 26px;
+  font-weight: 400;
+  margin: 0 0 24px;
+}
+
+.custom-product-card-grid__blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.custom-product-card-grid__block {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--cpc-gray-bg);
+}
+
+.custom-product-card-grid__image,
+.custom-product-card-grid__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.custom-product-card-grid__image--placeholder svg {
+  width: 60%;
+  height: 60%;
+  margin: 20% auto;
+  opacity: 0.4;
+}
+
+/* Quick-view trigger. top/right are set inline per block via the
+   "Quick view button position" range sliders in the theme customizer. */
+.custom-product-card-grid__plus {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--cpc-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-product-card-grid__plus:hover,
+.custom-product-card-grid__plus:focus-visible {
+  background: #ffffff;
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   Popup
+   ========================================================================== */
+
+.custom-product-card-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  opacity: 0;
+  animation: cpcFadeIn 0.2s ease forwards;
+}
+
+.custom-product-card-popup-overlay[hidden] {
+  display: none;
+}
+
+@keyframes cpcFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.custom-product-card-popup {
+  background: #ffffff;
+  width: 100%;
+  max-width: 340px;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  transform: translateY(10px);
+  animation: cpcPopIn 0.25s ease forwards;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@keyframes cpcPopIn {
+  to {
+    transform: translateY(0);
+  }
+}
+
+.custom-product-card-popup__close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cpc-black);
+  padding: 4px;
+}
+
+.custom-product-card-popup__scroll {
+  padding: 24px 24px 20px;
+  overflow-y: auto;
+}
+
+/* Header row: image thumbnail + title/price, as in the reference design */
+.custom-product-card-popup__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-right: 24px;
+  margin-bottom: 18px;
+}
+.custom-product-card-popup_img_wrapper{
+  width: 116px;
+  height: 186px;
+}
+.custom-product-card-popup__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+  background: var(--cpc-gray-bg);
+}
+
+.custom-product-card-popup__header-text {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.custom-product-card-popup__title {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 10px;
+}
+
+.custom-product-card-popup__price {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.custom-product-card-popup__description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #4a4a4a;
+  margin: 0 0 20px;
+}
+
+.custom-product-card-popup__option {
+  margin-bottom: 20px;
+}
+
+.custom-product-card-popup__option-label {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 8px;
+  color: var(--cpc-black);
+}
+
+/* Colour swatches — bordered pair of buttons, each with a colour
+   indicator strip on its left edge. Selected = black fill, white text. */
+.custom-product-card-popup__swatches {
+  display: flex;
+  border: 1px solid var(--cpc-black);
+}
+
+.custom-product-card-popup__swatch {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 10px 14px 10px 18px;
+  font-size: 14px;
+  font-weight: 400;
+  background: #ffffff;
+  color: var(--cpc-black);
+  border: none;
+  border-left: 6px solid var(--swatch-color, #cccccc);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-product-card-popup__swatch:not(:first-child) {
+  border-left-width: 6px;
+  box-shadow: -1px 0 0 var(--cpc-black);
+}
+
+.custom-product-card-popup__swatch.is-selected {
+  background: var(--cpc-black);
+  color: #ffffff;
+}
+
+.custom-product-card-popup__select {
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 40px 10px 16px;
+  font-size: 14px;
+  border: 1px solid var(--cpc-border);
+  border-radius: 0;
+  background: #fff;
+  color: var(--cpc-black);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23111' stroke-width='1.4' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.custom-product-card-popup__message {
+  margin: 0;
+  font-size: 12px;
+  min-height: 16px;
+}
+
+.custom-product-card-popup__add {
+  width: 100%;
+  flex-shrink: 0;
+  border-radius: 0 0 6px 6px;
+}
+
+.custom-product-card-popup__add:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.custom-product-card-popup__add:disabled .custom-product-card-btn__arrow {
+  transform: none;
+}
+
+body.custom-product-card-popup-open {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Responsive / mobile
+   ========================================================================== */
+
+@media screen and (max-width: 749px) {
+  .page-width {
+    padding: 0 16px;
+  }
+
+  .custom-product-card-grid__blocks {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+  }
+
+  .custom-product-card-grid__heading {
+    font-size: 20px;
+  }
+
+  .custom-product-card-popup__scroll {
+    padding: 20px 20px 16px;
+  }
+}
