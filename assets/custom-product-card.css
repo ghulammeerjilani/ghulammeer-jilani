@@ -245,7 +245,7 @@
   margin-bottom: 20px;
 }
 
-.custom-product-card-popup__option:last-of-type{
+.custom-product-card-popup__option:first-of-type{
   margin-bottom: 40px;
 }
 
