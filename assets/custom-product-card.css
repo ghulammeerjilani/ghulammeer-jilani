@@ -350,6 +350,11 @@ body.custom-product-card-popup-open {
   .custom-product-card-popup__scroll {
     padding: 20px 20px 16px;
   }
+
+  .custom-product-card-grid__plus{
+    top:6px !important;
+    right:6px !important;
+  }
 }
 
 @media (max-width:575px){
