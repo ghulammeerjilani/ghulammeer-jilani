@@ -45,11 +45,20 @@
             "button_top": 178,
             "button_right": 38
           }
+        },
+        "product_X6BYbG": {
+          "type": "product",
+          "settings": {
+            "product": "chequered-red-shirt",
+            "button_top": 48,
+            "button_right": 108
+          }
         }
       },
       "block_order": [
         "product_7NgHeR",
-        "product_GzK6aj"
+        "product_GzK6aj",
+        "product_X6BYbG"
       ],
       "name": "Custom Product Card",
       "settings": {
